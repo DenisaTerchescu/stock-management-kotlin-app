@@ -1,4 +1,4 @@
-package com.example.stockmanagementapp
+package com.example.stockmanagementapp.view
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
