@@ -8,6 +8,7 @@ import com.example.stockmanagementapp.data.model.Supplier
 import com.example.stockmanagementapp.data.model.Transaction
 import kotlinx.coroutines.flow.Flow
 
+
 class StockRepository(
     private val productDao: ProductDao,
     private val supplierDao: SupplierDao,
