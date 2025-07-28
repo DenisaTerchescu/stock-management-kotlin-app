@@ -53,7 +53,11 @@ class DashboardViewModel @Inject constructor(
 
             DashboardAction.NavigateToStockManagement -> {}
             DashboardAction.NavigateToSupplierList -> {}
-            DashboardAction.NavigateToTransactionHistory -> {}
+            DashboardAction.NavigateToTransactionHistory -> {
+                viewModelScope.launch {
+                    navigator.navigateTo(Destination.TransactionHistory)
+                }
+            }
         }
     }
 
