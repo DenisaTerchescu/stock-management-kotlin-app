@@ -38,7 +38,7 @@ class LoginViewModel @Inject constructor(
         when (action) {
             is LoginAction.NavigateToDashboard -> {
                 viewModelScope.launch {
-                    navigator.navigateTo(Destination.ProductList)
+                    navigator.navigateTo(Destination.Dashboard)
                 }
             }
             is LoginAction.ValidatePassword -> {}
