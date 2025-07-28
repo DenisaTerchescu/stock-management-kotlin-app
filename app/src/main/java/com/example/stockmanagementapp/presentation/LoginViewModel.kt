@@ -15,7 +15,6 @@ import javax.inject.Inject
 data class LoginState(
     val username: String = "",
     val password: String = "",
-    val isValidated: Boolean = false,
     val error: String? = null
 )
 
@@ -37,12 +36,33 @@ class LoginViewModel @Inject constructor(
     fun onAction(action: LoginAction) {
         when (action) {
             is LoginAction.NavigateToDashboard -> {
-                viewModelScope.launch {
-                    navigator.navigateTo(Destination.Dashboard)
+                val username =  _uiState.value.username
+                val password =  _uiState.value.password
+                if (username == "admin" && password == "admin"){
+                    viewModelScope.launch {
+                        navigator.navigateTo(Destination.Dashboard)
+                    }
                 }
+                else {
+                    _uiState.value = _uiState.value.copy(
+                        error = "Incorrect credentials!",
+                    )
+                }
+
             }
-            is LoginAction.ValidatePassword -> {}
-            is LoginAction.ValidateUsername -> {}
+            is LoginAction.ValidatePassword -> {
+
+                _uiState.value = _uiState.value.copy(
+                    password = action.password,
+                    error = null
+                )
+            }
+            is LoginAction.ValidateUsername -> {
+                _uiState.value = _uiState.value.copy(
+                    username = action.username,
+                    error = null
+                )
+            }
         }
     }
 }
