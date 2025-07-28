@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
 
                 (navigator as? ComposeNavigator)?.navController = navController
 
-                NavHost(navController, startDestination = Destination.Login.route) {
+                NavHost(navController, startDestination = Destination.Dashboard.route) {
 
                     composable(Destination.Login.route) {
 
