@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.stockmanagementapp.presentation.LoginAction
 import com.example.stockmanagementapp.presentation.LoginState
-import com.example.stockmanagementapp.presentation.ProductListAction
 
 @Composable
 fun LoginScreen(

@@ -1,10 +1,14 @@
 package com.example.stockmanagementapp.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.stockmanagementapp.repository.StockRepository
+import com.example.stockmanagementapp.view.navigator.Destination
+import com.example.stockmanagementapp.view.navigator.Navigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -23,7 +27,8 @@ sealed class LoginAction {
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val repository: StockRepository
+    private val repository: StockRepository,
+    private val navigator: Navigator
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginState())
@@ -31,7 +36,11 @@ class LoginViewModel @Inject constructor(
 
     fun onAction(action: LoginAction) {
         when (action) {
-            is LoginAction.NavigateToDashboard -> {}
+            is LoginAction.NavigateToDashboard -> {
+                viewModelScope.launch {
+                    navigator.navigateTo(Destination.ProductList)
+                }
+            }
             is LoginAction.ValidatePassword -> {}
             is LoginAction.ValidateUsername -> {}
         }
