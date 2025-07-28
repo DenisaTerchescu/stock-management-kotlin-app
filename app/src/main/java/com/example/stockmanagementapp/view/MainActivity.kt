@@ -13,28 +13,63 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.stockmanagementapp.presentation.ProductListState
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.stockmanagementapp.presentation.LoginViewModel
 import com.example.stockmanagementapp.presentation.ProductListViewModel
 import com.example.stockmanagementapp.ui.theme.StockManagementAppTheme
+import com.example.stockmanagementapp.view.navigator.ComposeNavigator
+import com.example.stockmanagementapp.view.navigator.Navigator
+import com.example.stockmanagementapp.view.screens.LoginScreen
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var navigator: Navigator
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             StockManagementAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val viewModel: ProductListViewModel = hiltViewModel()
-                    val state by viewModel.uiState.collectAsState()
 
-                    ProductListScreen(
-                        state = state,
-                        onAction = { action -> viewModel.onAction(action) },
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    val navController = rememberNavController()
+
+                    (navigator as? ComposeNavigator)?.navController = navController
+
+                    NavHost(navController, startDestination = "login") {
+
+                        composable("login") {
+
+                            val viewModel: LoginViewModel = hiltViewModel()
+                            val state by viewModel.uiState.collectAsState()
+
+                            LoginScreen(
+                                state = state,
+                                onAction = { action -> viewModel.onAction(action) },
+                                modifier = Modifier.padding(innerPadding)
+                            )
+                        }
+
+                        composable("product_list") {
+                            val viewModel: ProductListViewModel = hiltViewModel()
+                            val state by viewModel.uiState.collectAsState()
+
+                            ProductListScreen(
+                                state = state,
+                                onAction = { action -> viewModel.onAction(action) },
+                                modifier = Modifier.padding(innerPadding)
+                            )
+                        }
+                    }
                 }
+
+
             }
         }
     }
@@ -45,9 +80,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun GreetingPreview() {
     StockManagementAppTheme {
-        ProductListScreen(
-            state = ProductListState(),
-            onAction = { },
-        )
+//        ProductListScreen(
+//            state = ProductListState(),
+//            onAction = { },
+//        )
     }
 }
