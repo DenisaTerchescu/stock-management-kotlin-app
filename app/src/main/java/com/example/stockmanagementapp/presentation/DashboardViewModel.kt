@@ -30,40 +30,52 @@ sealed class DashboardAction {
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val repository: StockRepository,
-    private val navigator: Navigator
+    private val repository: StockRepository, private val navigator: Navigator
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DashboardState())
     val uiState: StateFlow<DashboardState> = _uiState
 
 
-
     fun onAction(action: DashboardAction) {
         when (action) {
             DashboardAction.Init -> {
-                viewModelScope.launch {
-                    repository.getLowStockProducts()
-                        .catch {
-                            _uiState.value = _uiState.value.copy(error = it.message)
-                        }
-                        .collect { products ->
-                            _uiState.value = _uiState.value.copy(lowStockItems = products)
-                        }
+                fetchLowStockItems()
+                fetchRecentTransactions()
 
-
-
-
-                }
             }
+
             DashboardAction.NavigateToProductList -> {
                 viewModelScope.launch {
                     navigator.navigateTo(Destination.ProductList)
                 }
             }
+
             DashboardAction.NavigateToStockManagement -> {}
             DashboardAction.NavigateToSupplierList -> {}
             DashboardAction.NavigateToTransactionHistory -> {}
+        }
+    }
+
+    private fun fetchLowStockItems() {
+        viewModelScope.launch {
+            repository.getLowStockProducts().catch {
+                    _uiState.value = _uiState.value.copy(error = it.message)
+                }.collect { products ->
+                    _uiState.value = _uiState.value.copy(lowStockItems = products)
+                }
+
+        }
+    }
+
+    private fun fetchRecentTransactions() {
+        viewModelScope.launch {
+            repository.getRecentTransactions(3).catch {
+                    _uiState.value = _uiState.value.copy(error = it.message)
+                }.collect { recentTransactions ->
+                    _uiState.value = _uiState.value.copy(recentTransactions = recentTransactions)
+                }
+
         }
     }
 }

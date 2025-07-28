@@ -36,4 +36,7 @@ class StockRepository(
     suspend fun insertTransaction(transaction: Transaction) = transactionDao.insert(transaction)
     suspend fun deleteTransaction(transaction: Transaction) = transactionDao.delete(transaction)
     fun getAllTransactions(): Flow<List<Transaction>> = transactionDao.getAllTransactions()
+    fun getRecentTransactions(limit: Int = 3): Flow<List<Transaction>> {
+        return transactionDao.getRecentTransactions(limit)
+    }
 }

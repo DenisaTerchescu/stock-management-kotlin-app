@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
@@ -33,6 +32,8 @@ import com.example.stockmanagementapp.presentation.DashboardAction
 import com.example.stockmanagementapp.presentation.DashboardState
 import com.example.stockmanagementapp.ui.theme.StockManagementAppTheme
 import com.example.stockmanagementapp.view.components.FeatureIconButton
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,8 +66,7 @@ fun DashboardScreen(
 
                     }
                 }, colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF66BB6A), // light green background
-                    titleContentColor = Color.Black // fallback, in case text color isn't set directly
+                    containerColor = Color(0xFF66BB6A), titleContentColor = Color.Black
                 )
 
             )
@@ -80,11 +80,11 @@ fun DashboardScreen(
         ) {
             ElevatedCard(
                 modifier = Modifier
-                    .height(200.dp)
+                    .height(300.dp)
                     .fillMaxWidth()
                     .padding(
-                    18.dp
-                )
+                        18.dp
+                    )
             ) {
                 Row(
                     modifier = Modifier
@@ -99,18 +99,52 @@ fun DashboardScreen(
                         fontWeight = FontWeight.Bold
                     )
                 }
-                Column (modifier = Modifier.padding(16.dp)){
+                Column(modifier = Modifier.padding(16.dp)) {
                     state.lowStockItems.forEach {
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth(),
                         ) {
                             Text(text = it.name, fontSize = 16.sp)
                             Spacer(modifier.width(8.dp))
-                            Text(text = it.currentStockLevel.toString(),
+                            Text(
+                                text = it.currentStockLevel.toString(),
                                 color = Color.Red,
-                                fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
+                    }
+                }
+
+                Row(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "Recent transactions",
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Column(modifier = Modifier.padding(16.dp)) {
+                    val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+                    state.recentTransactions.forEach {
+                        val transactionDate = dateFormat.format(it.date)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Text(text = it.type, fontSize = 16.sp)
+                            Spacer(modifier.width(8.dp))
+                            Text(
+                                text = transactionDate,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+
                     }
                 }
 

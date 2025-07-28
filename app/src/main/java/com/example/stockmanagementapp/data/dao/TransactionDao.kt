@@ -18,4 +18,7 @@ interface TransactionDao {
 
     @Query("SELECT * FROM `Transaction`")
     fun getAllTransactions(): Flow<List<Transaction>>
+
+    @Query("SELECT * FROM `transaction` ORDER BY date DESC LIMIT :limit")
+    fun getRecentTransactions(limit: Int = 3): Flow<List<Transaction>>
 }
