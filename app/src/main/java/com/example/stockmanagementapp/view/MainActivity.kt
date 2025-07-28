@@ -73,7 +73,6 @@ class MainActivity : ComponentActivity() {
                         ProductListScreen(
                             state = state,
                             onAction = { action -> viewModel.onAction(action) },
-
                             )
                     }
 
