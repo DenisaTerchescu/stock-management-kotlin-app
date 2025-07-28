@@ -1,31 +1,38 @@
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.rounded.Build
 import androidx.compose.material.icons.rounded.Face
 import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.stockmanagementapp.presentation.DashboardAction
 import com.example.stockmanagementapp.presentation.DashboardState
 import com.example.stockmanagementapp.ui.theme.StockManagementAppTheme
 import com.example.stockmanagementapp.view.components.FeatureIconButton
-import androidx.compose.ui.graphics.Color
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,6 +42,9 @@ fun DashboardScreen(
     modifier: Modifier = Modifier,
 ) {
 
+    LaunchedEffect(Unit) {
+        onAction(DashboardAction.Init)
+    }
     Scaffold(
         modifier = Modifier.fillMaxSize(), topBar = {
             TopAppBar(
@@ -54,8 +64,7 @@ fun DashboardScreen(
                         )
 
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
+                }, colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color(0xFF66BB6A), // light green background
                     titleContentColor = Color.Black // fallback, in case text color isn't set directly
                 )
@@ -69,7 +78,43 @@ fun DashboardScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            ElevatedCard(
+                modifier = Modifier
+                    .height(200.dp)
+                    .fillMaxWidth()
+                    .padding(
+                    18.dp
+                )
+            ) {
+                Row(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "Low stock items",
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Column (modifier = Modifier.padding(16.dp)){
+                    state.lowStockItems.forEach {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                        ) {
+                            Text(text = it.name, fontSize = 16.sp)
+                            Spacer(modifier.width(8.dp))
+                            Text(text = it.currentStockLevel.toString(),
+                                color = Color.Red,
+                                fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
 
+            }
             Row(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)

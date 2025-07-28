@@ -7,6 +7,7 @@ import com.example.stockmanagementapp.data.model.Product
 import com.example.stockmanagementapp.data.model.Supplier
 import com.example.stockmanagementapp.data.model.Transaction
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 
 class StockRepository(
@@ -18,6 +19,13 @@ class StockRepository(
     suspend fun insertProduct(product: Product) = productDao.insert(product)
     suspend fun deleteProduct(product: Product) = productDao.delete(product)
     fun getAllProducts(): Flow<List<Product>> = productDao.getAllProducts()
+
+    fun getLowStockProducts(): Flow<List<Product>> {
+        return productDao.getAllProducts()
+            .map { products ->
+                products.filter { it.currentStockLevel < it.minimumStockLevel }
+            }
+    }
 
     // For the suppliers
     suspend fun insertSupplier(supplier: Supplier) = supplierDao.insert(supplier)
