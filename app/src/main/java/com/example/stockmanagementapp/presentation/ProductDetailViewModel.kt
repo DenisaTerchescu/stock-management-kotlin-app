@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class ProductDetailState(
-    val product: Product = createEmptyProduct(),
+    val product: Product? = null,
     val isLoading: Boolean = false,
     val error: String? = null
 ) {

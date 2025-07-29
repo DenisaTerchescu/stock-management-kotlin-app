@@ -9,8 +9,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -39,31 +43,40 @@ fun ProductListScreen(
     }
 
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(), topBar = {
-            TopAppBar(
-                title = {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
+    Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
+        TopAppBar(
+            title = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
 
-                        Text(
-                            text = "Product List",
-                            modifier = Modifier
-                                .align(Alignment.CenterVertically)
-                                .padding(horizontal = 8.dp),
-                            color = Color.White
-                        )
+                    Text(
+                        text = "Product List",
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .padding(horizontal = 8.dp),
+                        color = Color.White
+                    )
 
-                    }
-                }, colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF66BB6A), titleContentColor = Color.Black
-                )
+                }
+            }, colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color(0xFF66BB6A), titleContentColor = Color.Black
+            )
 
+        )
+    }, floatingActionButton = {
+        FloatingActionButton(
+            onClick = {
+
+            },
+        ) {
+            Icon(
+                Icons.Filled.Add, "Add new product action button",
             )
         }
+    }
 
     ) { innerPadding ->
         Column(
@@ -76,12 +89,11 @@ fun ProductListScreen(
                     SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
 
                     ElevatedCard(modifier = Modifier
-                        .clickable{
+                        .clickable {
                             onAction(ProductListAction.NavigateToProductDetail(it.id))
                         }
                         .padding(8.dp)
-                        .fillMaxWidth())
-                        {
+                        .fillMaxWidth()) {
                         Column(
                             modifier = Modifier.padding(12.dp)
                         ) {

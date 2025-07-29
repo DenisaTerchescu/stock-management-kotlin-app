@@ -5,15 +5,21 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,6 +35,8 @@ fun ProductDetailScreen(
     onAction: (ProductDetailAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+    var saveButtonEnabled by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         onAction(ProductDetailAction.Init(productId))
@@ -62,31 +70,61 @@ fun ProductDetailScreen(
 
     ) { innerPadding ->
         Column(
-            modifier = modifier.padding(innerPadding),
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            state.product.let {
+            state.product?.let {
 
                 Column(
-                    modifier = Modifier.padding(12.dp)
+                    modifier = Modifier.padding(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Text(text = "Product id: ${it.id}")
-                    Text(text = "Product name: ${it.name}")
-                    Text(text = "Product description: ${it.description}")
-                    Text(text = "Product price: ${it.price}")
-                    Text(text = "Stock level: ${it.currentStockLevel}")
+                    var name by remember { mutableStateOf(it.name) }
+                    var description by remember { mutableStateOf(it.description) }
+                    var category by remember { mutableStateOf(it.category) }
+                    saveButtonEnabled = (name != it.name) or (description != it.description) or (category != it.category)
+
+                    TextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                        label = { Text("Product Name") },
+
+                        value = name, onValueChange = { value ->
+                            name = value
+                        })
+
+
+                    TextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                        label = { Text("Product description") },
+
+                        value = description, onValueChange = { value ->
+                            description = value
+                        })
+
+                    TextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                        label = { Text("Product category") },
+
+                        value = category, onValueChange = { value ->
+                            category = value
+                        })
                 }
 
             }
-            Button(
-                onClick = {
-                    onAction(ProductDetailAction.NavigateToEditProduct(productId))
-                },
-                content = {
-                    Text("Edit product")
-                }
-            )
+            Button(enabled = saveButtonEnabled, onClick = {
+
+            }, content = {
+                Text("Save changes")
+            })
 
         }
     }
