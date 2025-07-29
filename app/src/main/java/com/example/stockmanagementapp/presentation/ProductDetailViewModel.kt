@@ -16,7 +16,7 @@ import javax.inject.Inject
 data class ProductDetailState(
     val product: Product? = null,
     val isLoading: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
 ) {
     companion object EmptyProduct {
         fun createEmptyProduct(): Product = Product(
@@ -37,6 +37,9 @@ sealed class ProductDetailAction {
     data class Init(val productId: Int) : ProductDetailAction()
 
     data class NavigateToEditProduct(val productId: Int) : ProductDetailAction()
+    data class SaveChanges(
+        val name: String, val description: String, val category: String
+    ) : ProductDetailAction()
 }
 
 @HiltViewModel
@@ -53,16 +56,14 @@ class ProductDetailViewModel @Inject constructor(
             is ProductDetailAction.Init -> {
                 viewModelScope.launch {
 
-                    repository.getProductById(action.productId)
-                        .catch {
-                            _uiState.value = _uiState.value.copy(error = it.message)
+                    repository.getProductById(action.productId).catch {
+                        _uiState.value = _uiState.value.copy(error = it.message)
+                    }.collect {
+                        it?.let {
+                            _uiState.value = _uiState.value.copy(product = it)
                         }
-                        .collect {
-                            it?.let {
-                                _uiState.value = _uiState.value.copy(product = it)
-                            }
 
-                        }
+                    }
 
 
                 }
@@ -70,6 +71,22 @@ class ProductDetailViewModel @Inject constructor(
 
             is ProductDetailAction.NavigateToEditProduct -> {
                 navigator.navigateTo(Destination.EditProduct.createRoute(action.productId))
+            }
+
+            is ProductDetailAction.SaveChanges -> {
+                val existingProduct = _uiState.value.product
+                val updatedProduct = existingProduct?.copy(
+                    name = action.name.ifBlank { existingProduct.name },
+                    description = action.description.ifBlank { existingProduct.description },
+                    category = action.category.ifBlank { existingProduct.category })
+
+                viewModelScope.launch {
+                    updatedProduct?.let {
+                        repository.updateProduct(it)
+                    }
+                    navigator.navigateTo(Destination.ProductList.route)
+
+                }
             }
         }
     }

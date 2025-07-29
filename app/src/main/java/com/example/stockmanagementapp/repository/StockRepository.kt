@@ -21,6 +21,9 @@ class StockRepository(
     }
     suspend fun insertProduct(product: Product) = productDao.insert(product)
     suspend fun deleteProduct(product: Product) = productDao.delete(product)
+    suspend fun updateProduct(product: Product) {
+        productDao.updateProduct(product)
+    }
     fun getAllProducts(): Flow<List<Product>> = productDao.getAllProducts()
 
     fun getLowStockProducts(): Flow<List<Product>> {

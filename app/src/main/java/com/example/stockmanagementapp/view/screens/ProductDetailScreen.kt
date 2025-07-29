@@ -117,14 +117,18 @@ fun ProductDetailScreen(
                         value = category, onValueChange = { value ->
                             category = value
                         })
+
+                    Button(enabled = saveButtonEnabled, onClick = {
+                        onAction(ProductDetailAction.SaveChanges(name,description,category))
+                    }, content = {
+                        Text("Save changes")
+                    })
                 }
 
-            }
-            Button(enabled = saveButtonEnabled, onClick = {
 
-            }, content = {
-                Text("Save changes")
-            })
+
+            }
+
 
         }
     }
