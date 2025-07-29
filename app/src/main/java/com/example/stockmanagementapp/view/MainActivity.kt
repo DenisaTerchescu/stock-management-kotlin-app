@@ -20,6 +20,7 @@ import com.example.stockmanagementapp.presentation.DashboardViewModel
 import com.example.stockmanagementapp.presentation.LoginViewModel
 import com.example.stockmanagementapp.presentation.ProductDetailViewModel
 import com.example.stockmanagementapp.presentation.ProductListViewModel
+import com.example.stockmanagementapp.presentation.SupplierDetailViewModel
 import com.example.stockmanagementapp.presentation.SupplierListViewModel
 import com.example.stockmanagementapp.presentation.TransactionHistoryViewModel
 import com.example.stockmanagementapp.ui.theme.StockManagementAppTheme
@@ -30,6 +31,7 @@ import com.example.stockmanagementapp.view.screens.AddNewProductScreen
 import com.example.stockmanagementapp.view.screens.LoginScreen
 import com.example.stockmanagementapp.view.screens.ProductDetailScreen
 import com.example.stockmanagementapp.view.screens.ProductListScreen
+import com.example.stockmanagementapp.view.screens.SupplierDetailScreen
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -126,6 +128,21 @@ class MainActivity : ComponentActivity() {
                             state = state,
                             onAction = { action -> viewModel.onAction(action) },
                             )
+                    }
+
+                    composable(
+                        route = Destination.SupplierDetail.route,
+                        arguments = listOf(navArgument("supplierId") { type = NavType.IntType })
+                    ) { backStackEntry ->
+                        val viewModel: SupplierDetailViewModel = hiltViewModel()
+                        val state by viewModel.uiState.collectAsState()
+
+                        val supplierId =
+                            backStackEntry.arguments?.getInt("supplierId") ?: return@composable
+                        SupplierDetailScreen(
+                            supplierId = supplierId,
+                            state = state,
+                            onAction = { action -> viewModel.onAction(action) })
                     }
                 }
 

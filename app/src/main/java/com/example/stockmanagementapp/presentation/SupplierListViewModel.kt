@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.stockmanagementapp.data.model.Supplier
 import com.example.stockmanagementapp.repository.StockRepository
+import com.example.stockmanagementapp.view.navigator.Destination
 import com.example.stockmanagementapp.view.navigator.Navigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +22,7 @@ data class SupplierListState(
 sealed class SupplierListAction {
     data object FetchSuppliers : SupplierListAction()
 
-    data class NavigateToSupplierDetailScreen(val productId: Int) : SupplierListAction()
+    data class NavigateToSupplierDetailScreen(val supplierId: Int) : SupplierListAction()
 }
 
 @HiltViewModel
@@ -39,7 +40,9 @@ class SupplierListViewModel @Inject constructor(
                 fetchSuppliers()
             }
 
-            is SupplierListAction.NavigateToSupplierDetailScreen -> {}
+            is SupplierListAction.NavigateToSupplierDetailScreen -> {
+                navigator.navigateTo(Destination.SupplierDetail.createRoute(action.supplierId))
+            }
         }
     }
 

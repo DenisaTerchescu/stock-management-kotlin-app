@@ -71,7 +71,7 @@ fun SupplierListScreen(
 
                     ElevatedCard(modifier = Modifier
                         .clickable {
-//                            onAction(SupplierListAction.NavigateToSupplierDetailScreen)
+                            onAction(SupplierListAction.NavigateToSupplierDetailScreen(it.id))
                         }
                         .padding(8.dp)
                         .fillMaxWidth()) {

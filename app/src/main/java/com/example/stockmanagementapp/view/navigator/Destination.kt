@@ -13,8 +13,9 @@ sealed class Destination(val route: String) {
 
     object SupplierList : Destination("supplier_list")
 
-    data class SupplierDetail(val supplierId: Int) : Destination("supplier_detail/$supplierId")
-
+    object SupplierDetail : Destination("supplier_detail/{supplierId}") {
+        fun createRoute(supplierId: Int): String = "supplier_detail/$supplierId"
+    }
     object TransactionHistory : Destination("transaction_history")
 
     object StockManagement : Destination("stock_management")
