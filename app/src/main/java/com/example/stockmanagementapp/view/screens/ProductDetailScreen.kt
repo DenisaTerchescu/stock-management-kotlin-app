@@ -12,14 +12,26 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.stockmanagementapp.presentation.ProductDetailAction
+import com.example.stockmanagementapp.presentation.ProductDetailState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductDetailScreen() {
+fun ProductDetailScreen(
+    productId:Int,
+    state: ProductDetailState,
+    onAction: (ProductDetailAction) -> Unit,
+    modifier: Modifier = Modifier
+) {
+
+    LaunchedEffect(Unit){
+        onAction(ProductDetailAction.Init(productId))
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(), topBar = {
@@ -53,7 +65,7 @@ fun ProductDetailScreen() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text("Product detail")
+
         }
     }
 }

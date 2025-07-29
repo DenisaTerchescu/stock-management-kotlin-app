@@ -67,10 +67,4 @@ class ProductListViewModel @Inject constructor(
         }
     }
 
-    fun addProduct(product: Product) {
-        viewModelScope.launch {
-            repository.insertProduct(product)
-            fetchProducts()
-        }
-    }
 }

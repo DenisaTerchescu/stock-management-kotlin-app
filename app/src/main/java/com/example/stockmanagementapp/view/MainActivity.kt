@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.stockmanagementapp.presentation.DashboardViewModel
 import com.example.stockmanagementapp.presentation.LoginViewModel
+import com.example.stockmanagementapp.presentation.ProductDetailViewModel
 import com.example.stockmanagementapp.presentation.ProductListViewModel
 import com.example.stockmanagementapp.presentation.TransactionHistoryViewModel
 import com.example.stockmanagementapp.ui.theme.StockManagementAppTheme
@@ -76,7 +77,7 @@ class MainActivity : ComponentActivity() {
                         ProductListScreen(
                             state = state,
                             onAction = { action -> viewModel.onAction(action) },
-                            )
+                        )
                     }
 
                     composable(Destination.TransactionHistory.route) {
@@ -94,8 +95,15 @@ class MainActivity : ComponentActivity() {
                         route = Destination.ProductDetail.route,
                         arguments = listOf(navArgument("productId") { type = NavType.IntType })
                     ) { backStackEntry ->
-                        val productId = backStackEntry.arguments?.getInt("productId") ?: return@composable
-                        ProductDetailScreen()
+                        val viewModel: ProductDetailViewModel = hiltViewModel()
+                        val state by viewModel.uiState.collectAsState()
+
+                        val productId =
+                            backStackEntry.arguments?.getInt("productId") ?: return@composable
+                        ProductDetailScreen(
+                            productId = productId,
+                            state = state,
+                            onAction = { action -> viewModel.onAction(action) })
                     }
                 }
 
