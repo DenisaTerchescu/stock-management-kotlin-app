@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.stockmanagementapp.presentation.AddNewProductViewModel
 import com.example.stockmanagementapp.presentation.DashboardViewModel
 import com.example.stockmanagementapp.presentation.LoginViewModel
 import com.example.stockmanagementapp.presentation.ProductDetailViewModel
@@ -23,6 +24,7 @@ import com.example.stockmanagementapp.ui.theme.StockManagementAppTheme
 import com.example.stockmanagementapp.view.navigator.ComposeNavigator
 import com.example.stockmanagementapp.view.navigator.Destination
 import com.example.stockmanagementapp.view.navigator.Navigator
+import com.example.stockmanagementapp.view.screens.AddNewProductScreen
 import com.example.stockmanagementapp.view.screens.LoginScreen
 import com.example.stockmanagementapp.view.screens.ProductDetailScreen
 import com.example.stockmanagementapp.view.screens.ProductListScreen
@@ -106,13 +108,12 @@ class MainActivity : ComponentActivity() {
                             onAction = { action -> viewModel.onAction(action) })
                     }
 
-                    composable(
-                        route = Destination.EditProduct.route,
-                        arguments = listOf(navArgument("productId") { type = NavType.IntType })
-                    ) { backStackEntry ->
-
-                        val productId =
-                            backStackEntry.arguments?.getInt("productId") ?: return@composable
+                    composable(route = Destination.AddNewProduct.route) {
+                        val viewModel: AddNewProductViewModel = hiltViewModel()
+                        val state by viewModel.uiState.collectAsState()
+                        AddNewProductScreen(
+                            state = state,
+                        onAction = { action -> viewModel.onAction(action) })
 
                     }
                 }

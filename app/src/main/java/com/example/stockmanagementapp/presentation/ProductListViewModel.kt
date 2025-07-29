@@ -24,6 +24,7 @@ sealed class ProductListAction {
     data object FetchProducts : ProductListAction()
 
     data class NavigateToProductDetail(val productId: Int)  : ProductListAction()
+    data object NavigateToAddNewProduct : ProductListAction()
 }
 
 @HiltViewModel
@@ -50,6 +51,9 @@ class ProductListViewModel @Inject constructor(
             }
            is ProductListAction.NavigateToProductDetail -> {
                 navigator.navigateTo(Destination.ProductDetail.createRoute(action.productId))
+            }
+            is ProductListAction.NavigateToAddNewProduct -> {
+                navigator.navigateTo(Destination.AddNewProduct.route)
             }
         }
     }

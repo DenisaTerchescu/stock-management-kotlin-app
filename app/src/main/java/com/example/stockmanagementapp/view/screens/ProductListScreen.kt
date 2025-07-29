@@ -69,7 +69,7 @@ fun ProductListScreen(
     }, floatingActionButton = {
         FloatingActionButton(
             onClick = {
-
+                onAction(ProductListAction.NavigateToAddNewProduct)
             },
         ) {
             Icon(

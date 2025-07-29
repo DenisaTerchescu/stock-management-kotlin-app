@@ -9,9 +9,7 @@ sealed class Destination(val route: String) {
         fun createRoute(productId: Int): String = "product_detail/$productId"
     }
 
-    object EditProduct : Destination("edit_product/{productId}") {
-        fun createRoute(productId: Int): String = "edit_product/$productId"
-    }
+    object AddNewProduct : Destination("add_product")
 
     object SupplierList : Destination("supplier_list")
 

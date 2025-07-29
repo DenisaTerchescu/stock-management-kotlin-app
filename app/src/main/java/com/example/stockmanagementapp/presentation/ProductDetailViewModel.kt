@@ -36,7 +36,6 @@ data class ProductDetailState(
 sealed class ProductDetailAction {
     data class Init(val productId: Int) : ProductDetailAction()
 
-    data class NavigateToEditProduct(val productId: Int) : ProductDetailAction()
     data class SaveChanges(
         val name: String, val description: String, val category: String
     ) : ProductDetailAction()
@@ -69,9 +68,6 @@ class ProductDetailViewModel @Inject constructor(
                 }
             }
 
-            is ProductDetailAction.NavigateToEditProduct -> {
-                navigator.navigateTo(Destination.EditProduct.createRoute(action.productId))
-            }
 
             is ProductDetailAction.SaveChanges -> {
                 val existingProduct = _uiState.value.product
