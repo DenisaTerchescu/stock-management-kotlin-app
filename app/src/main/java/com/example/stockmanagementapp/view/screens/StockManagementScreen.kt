@@ -1,5 +1,7 @@
 package com.example.stockmanagementapp.view.screens
 
+import android.app.DatePickerDialog
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -7,8 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -16,12 +21,14 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -29,6 +36,10 @@ import com.example.stockmanagementapp.presentation.AddNewProductAction
 import com.example.stockmanagementapp.presentation.AddNewProductState
 import com.example.stockmanagementapp.presentation.StockManagementAction
 import com.example.stockmanagementapp.presentation.StockManagementState
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,79 +88,90 @@ fun StockManagementScreen(
         ) {
             state.transaction.let {
 
-//                Column(
-//                    modifier = Modifier.padding(12.dp),
-//                    verticalArrangement = Arrangement.spacedBy(8.dp)
-//                ) {
-//                    var name by remember { mutableStateOf(it.name) }
-//                    var description by remember { mutableStateOf(it.description) }
-//                    var category by remember { mutableStateOf(it.category) }
-//                    var price by remember { mutableStateOf(it.price.toString()) }
-//
-//                    saveButtonEnabled =
-//                        (name != it.name) or (description != it.description) or (category != it.category)
-//
-//                    TextField(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(horizontal = 8.dp),
-//                        label = { Text("Product Name") },
-//
-//                        value = name,
-//                        onValueChange = { value ->
-//                            name = value
-//                        })
-//
-//
-//                    TextField(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(horizontal = 8.dp),
-//                        label = { Text("Product description") },
-//
-//                        value = description,
-//                        onValueChange = { value ->
-//                            description = value
-//                        })
-//
-//                    TextField(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(horizontal = 8.dp),
-//                        label = { Text("Product category") },
-//
-//                        value = category,
-//                        onValueChange = { value ->
-//                            category = value
-//                        })
-//
-//                    TextField(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(horizontal = 8.dp),
-//                        label = { Text("Product price") },
-//
-//                        value = price,
-//                        onValueChange = { value ->
-//                            price = value
-//                        },
-//                        keyboardOptions = KeyboardOptions(
-//                            keyboardType = KeyboardType.Number,
-//                            imeAction = ImeAction.Next
-//                        )
-//                    )
-//
-//                    Button(enabled = saveButtonEnabled, onClick = {
-//                        onAction(AddNewProductAction.SaveProduct(newProduct.copy(
-//                            name = name,
-//                            description = description,
-//                            category = category,
-//                            price = price.toDouble()
-//                        )))
-//                    }, content = {
-//                        Text("Add the new product")
-//                    })
-//                }
+                Column(
+                    modifier = Modifier.padding(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    var type by remember { mutableStateOf(it.type) }
+                    var date by remember { mutableLongStateOf(it.date) }
+                    var productId by remember { mutableStateOf(it.productId.toString()) }
+                    var quantity by remember { mutableStateOf(it.quantity.toString()) }
+                    var notes by remember { mutableStateOf(it.notes) }
+
+                    saveButtonEnabled =
+                        (quantity != it.quantity.toString()) or (type != it.type) or (date != it.date)
+
+                    TextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                        label = { Text("Stock type") },
+
+                        value = type,
+                        onValueChange = { value ->
+                            type = value
+                        })
+
+
+
+                    DateInputField(
+                        dateMillis = date,
+                        onDateSelected = { date = it }
+                    )
+
+                    TextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                        label = { Text("Product id") },
+
+                        value = productId,
+                        onValueChange = { value ->
+                            productId = value
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Next
+                        ))
+
+                    TextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                        label = { Text("Stock quantity") },
+
+                        value = quantity,
+                        onValueChange = { value ->
+                            quantity = value
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Next
+                        )
+                    )
+
+                    TextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                        label = { Text("Notes") },
+
+                        value = notes,
+                        onValueChange = { value ->
+                            notes = value
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done
+                        )
+                    )
+                    Button(enabled = saveButtonEnabled, onClick = {
+                        onAction(StockManagementAction.Save(newTransaction.copy(
+                            date = date, type = type, productId = productId.toInt(), quantity = quantity.toInt(), notes = notes
+                        )))
+                    }, content = {
+                        Text("Add the new stock")
+                    })
+                }
 
 
             }
@@ -158,4 +180,43 @@ fun StockManagementScreen(
         }
     }
 
+}
+
+@Composable
+fun DateInputField(
+    dateMillis: Long,
+    onDateSelected: (Long) -> Unit
+) {
+    val context = LocalContext.current
+    val calendar = Calendar.getInstance().apply { timeInMillis = dateMillis }
+
+    val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+    val formattedDate = remember(dateMillis) { dateFormat.format(Date(dateMillis)) }
+
+    val datePickerDialog = DatePickerDialog(
+        context,
+        { _, year, month, dayOfMonth ->
+            val selectedCalendar = Calendar.getInstance()
+            selectedCalendar.set(year, month, dayOfMonth)
+            onDateSelected(selectedCalendar.timeInMillis)
+        },
+        calendar.get(Calendar.YEAR),
+        calendar.get(Calendar.MONTH),
+        calendar.get(Calendar.DAY_OF_MONTH)
+    )
+
+    TextField(
+        value = formattedDate,
+        onValueChange = {},
+        label = { Text("Stock date") },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp),
+        readOnly = true,
+        trailingIcon = {
+            Icon(Icons.Default.DateRange, contentDescription = "",
+                modifier = Modifier
+                    .clickable { datePickerDialog.show() },)
+        }
+    )
 }

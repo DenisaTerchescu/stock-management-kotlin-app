@@ -19,7 +19,7 @@ data class StockManagementState(
 ) {
     companion object EmptyTransaction {
         fun createEmptyTransaction(): Transaction = Transaction(
-            id = 0, date = 0, type = "", productId = 0, quantity = 0, notes = ""
+            id = 0, date = System.currentTimeMillis(), type = "", productId = 0, quantity = 0, notes = ""
         )
     }
 }
