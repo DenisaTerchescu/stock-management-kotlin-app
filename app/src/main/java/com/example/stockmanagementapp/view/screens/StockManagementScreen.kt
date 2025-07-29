@@ -3,6 +3,7 @@ package com.example.stockmanagementapp.view.screens
 import android.app.DatePickerDialog
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,8 +11,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -32,8 +36,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.example.stockmanagementapp.presentation.AddNewProductAction
-import com.example.stockmanagementapp.presentation.AddNewProductState
 import com.example.stockmanagementapp.presentation.StockManagementAction
 import com.example.stockmanagementapp.presentation.StockManagementState
 import java.text.SimpleDateFormat
@@ -99,25 +101,21 @@ fun StockManagementScreen(
                     var notes by remember { mutableStateOf(it.notes) }
 
                     saveButtonEnabled =
-                        (quantity != it.quantity.toString()) or (type != it.type) or (date != it.date)
+                        (quantity.isNotEmpty()) and (productId.isNotEmpty())
 
-                    TextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
+
+
+                    StockTypeDropdown(
+                        modifier = Modifier.fillMaxWidth()
                             .padding(horizontal = 8.dp),
-                        label = { Text("Stock type") },
-
-                        value = type,
-                        onValueChange = { value ->
-                            type = value
-                        })
+                        selectedType = type,
+                        onTypeSelected = { newType -> type = newType }
+                    )
 
 
 
                     DateInputField(
-                        dateMillis = date,
-                        onDateSelected = { date = it }
-                    )
+                        dateMillis = date, onDateSelected = { date = it })
 
                     TextField(
                         modifier = Modifier
@@ -130,9 +128,9 @@ fun StockManagementScreen(
                             productId = value
                         },
                         keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number,
-                            imeAction = ImeAction.Next
-                        ))
+                            keyboardType = KeyboardType.Number, imeAction = ImeAction.Next
+                        )
+                    )
 
                     TextField(
                         modifier = Modifier
@@ -145,8 +143,7 @@ fun StockManagementScreen(
                             quantity = value
                         },
                         keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number,
-                            imeAction = ImeAction.Next
+                            keyboardType = KeyboardType.Number, imeAction = ImeAction.Next
                         )
                     )
 
@@ -165,9 +162,17 @@ fun StockManagementScreen(
                         )
                     )
                     Button(enabled = saveButtonEnabled, onClick = {
-                        onAction(StockManagementAction.Save(newTransaction.copy(
-                            date = date, type = type, productId = productId.toInt(), quantity = quantity.toInt(), notes = notes
-                        )))
+                        onAction(
+                            StockManagementAction.Save(
+                                newTransaction.copy(
+                                    date = date,
+                                    type = type,
+                                    productId = productId.toInt(),
+                                    quantity = quantity.toInt(),
+                                    notes = notes
+                                )
+                            )
+                        )
                     }, content = {
                         Text("Add the new stock")
                     })
@@ -184,8 +189,7 @@ fun StockManagementScreen(
 
 @Composable
 fun DateInputField(
-    dateMillis: Long,
-    onDateSelected: (Long) -> Unit
+    dateMillis: Long, onDateSelected: (Long) -> Unit
 ) {
     val context = LocalContext.current
     val calendar = Calendar.getInstance().apply { timeInMillis = dateMillis }
@@ -214,9 +218,45 @@ fun DateInputField(
             .padding(horizontal = 8.dp),
         readOnly = true,
         trailingIcon = {
-            Icon(Icons.Default.DateRange, contentDescription = "",
-                modifier = Modifier
-                    .clickable { datePickerDialog.show() },)
-        }
-    )
+            Icon(
+                Icons.Default.DateRange, contentDescription = "",
+                modifier = Modifier.clickable { datePickerDialog.show() },
+            )
+        })
 }
+
+
+@Composable
+fun StockTypeDropdown(
+    selectedType: String, onTypeSelected: (String) -> Unit, modifier: Modifier = Modifier
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val options = listOf("restock", "sale")
+
+    Box(modifier) {
+        TextField(
+            value = selectedType,
+            onValueChange = {},
+            label = { Text("Stock type") },
+            modifier = Modifier.fillMaxWidth(),
+            readOnly = true,
+            trailingIcon = {
+                Icon(Icons.Default.ArrowDropDown, contentDescription = null,
+                    modifier = Modifier
+                        .clickable { expanded = true },  )
+            })
+        DropdownMenu(
+            expanded = expanded, onDismissRequest = { expanded = false }) {
+            options.forEach { option ->
+                DropdownMenuItem(text = {
+                    Text(option)
+                }, onClick = {
+                    onTypeSelected(option)
+                    expanded = false
+                })
+            }
+        }
+    }
+}
+
+

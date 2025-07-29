@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
 
 data class StockManagementState(
     val transaction: Transaction = createEmptyTransaction(),
@@ -19,7 +20,7 @@ data class StockManagementState(
 ) {
     companion object EmptyTransaction {
         fun createEmptyTransaction(): Transaction = Transaction(
-            id = 0, date = System.currentTimeMillis(), type = "", productId = 0, quantity = 0, notes = ""
+            id = Random.nextInt(100000, 999999), date = System.currentTimeMillis(), type = "restock", productId = 0, quantity = 0, notes = ""
         )
     }
 }
