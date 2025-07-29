@@ -34,8 +34,13 @@ class StockRepository(
     }
 
     // For the suppliers
+    suspend fun getSupplierById(id: Int): Flow<Supplier?> {
+        return supplierDao.getSupplierById(id)
+    }
     suspend fun insertSupplier(supplier: Supplier) = supplierDao.insert(supplier)
-    suspend fun deleteSupplier(supplier: Supplier) = supplierDao.delete(supplier)
+    suspend fun updateSupplier(supplier: Supplier) {
+        supplierDao.updateSupplier(supplier)
+    }
     fun getAllSuppliers(): Flow<List<Supplier>> = supplierDao.getAllSuppliers()
 
     // For the transactions

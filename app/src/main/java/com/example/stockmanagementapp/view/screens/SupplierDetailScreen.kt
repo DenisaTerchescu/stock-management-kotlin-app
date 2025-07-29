@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,8 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.stockmanagementapp.presentation.ProductDetailAction
-import com.example.stockmanagementapp.presentation.ProductDetailState
 import com.example.stockmanagementapp.presentation.SupplierDetailAction
 import com.example.stockmanagementapp.presentation.SupplierDetailState
 
@@ -84,53 +81,52 @@ fun SupplierDetailScreen(
                     modifier = Modifier.padding(12.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-//                    var name by remember { mutableStateOf(it.name) }
-//                    var description by remember { mutableStateOf(it.description) }
-//                    var category by remember { mutableStateOf(it.category) }
-//                    saveButtonEnabled = (name != it.name) or (description != it.description) or (category != it.category)
-//
-//                    TextField(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(horizontal = 8.dp),
-//                        label = { Text("Product Name") },
-//
-//                        value = name, onValueChange = { value ->
-//                            name = value
-//                        })
-//
-//
-//                    TextField(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(horizontal = 8.dp),
-//                        label = { Text("Product description") },
-//
-//                        value = description, onValueChange = { value ->
-//                            description = value
-//                        })
-//
-//                    TextField(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(horizontal = 8.dp),
-//                        label = { Text("Product category") },
-//
-//                        value = category, onValueChange = { value ->
-//                            category = value
-//                        })
-//
-//                    Button(enabled = saveButtonEnabled, onClick = {
-//                        onAction(ProductDetailAction.SaveChanges(name,description,category))
-//                    }, content = {
-//                        Text("Save changes")
-//                    })
+                    var name by remember { mutableStateOf(it.name) }
+                    var email by remember { mutableStateOf(it.email) }
+                    var phone by remember { mutableStateOf(it.phone) }
+                    saveButtonEnabled =
+                        (name != it.name) or (email != it.email) or (phone != it.phone)
+
+                    TextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                        label = { Text("Supplier Name") },
+
+                        value = name,
+                        onValueChange = { value ->
+                            name = value
+                        })
+
+
+                    TextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                        label = { Text("Email") },
+
+                        value = email,
+                        onValueChange = { value ->
+                            email = value
+                        })
+
+                    TextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                        label = { Text("Phone") },
+                        value = phone,
+                        onValueChange = { value ->
+                            phone = value
+                        })
+
+                    Button(enabled = saveButtonEnabled, onClick = {
+                        onAction(SupplierDetailAction.SaveChanges(name, email, phone))
+                    }, content = {
+                        Text("Save changes")
+                    })
                 }
-
-
-
             }
-
 
         }
     }

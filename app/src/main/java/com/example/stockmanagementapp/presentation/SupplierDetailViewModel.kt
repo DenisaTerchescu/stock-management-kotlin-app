@@ -1,12 +1,16 @@
 package com.example.stockmanagementapp.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.stockmanagementapp.data.model.Supplier
 import com.example.stockmanagementapp.repository.StockRepository
+import com.example.stockmanagementapp.view.navigator.Destination
 import com.example.stockmanagementapp.view.navigator.Navigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class SupplierDetailState(
@@ -35,34 +39,33 @@ class SupplierDetailViewModel @Inject constructor(
         when (action) {
 
             is SupplierDetailAction.Init -> {
-//                viewModelScope.launch {
-//
-//                    repository.getProductById(action.productId).catch {
-//                        _uiState.value = _uiState.value.copy(error = it.message)
-//                    }.collect {
-//                        it?.let {
-//                            _uiState.value = _uiState.value.copy(product = it)
-//                        }
-//
-//                    }
-//                }
+                viewModelScope.launch {
+                    repository.getSupplierById(action.supplierId).catch {
+                        _uiState.value = _uiState.value.copy(error = it.message)
+                    }.collect {
+                        it?.let {
+                            _uiState.value = _uiState.value.copy(supplier = it)
+                        }
+
+                    }
+                }
             }
 
 
             is SupplierDetailAction.SaveChanges -> {
-//                val existingProduct = _uiState.value.product
-//                val updatedProduct = existingProduct?.copy(
-//                    name = action.name.ifBlank { existingProduct.name },
-//                    description = action.description.ifBlank { existingProduct.description },
-//                    category = action.category.ifBlank { existingProduct.category })
-//
-//                viewModelScope.launch {
-//                    updatedProduct?.let {
-//                        repository.updateProduct(it)
-//                    }
-//                    navigator.navigateTo(Destination.ProductList.route)
-//
-//                }
+                val existingSupplier = _uiState.value.supplier
+                val updatedSupplier= existingSupplier?.copy(
+                    name = action.name.ifBlank { existingSupplier.name },
+                    email = action.email.ifBlank { existingSupplier.email },
+                    phone = action.phone.ifBlank { existingSupplier.phone })
+
+                viewModelScope.launch {
+                    updatedSupplier?.let {
+                        repository.updateSupplier(updatedSupplier)
+                    }
+                    navigator.navigateTo(Destination.SupplierList.route)
+
+                }
             }
         }
     }
