@@ -50,7 +50,7 @@ class ProductDetailViewModel @Inject constructor(
             is ProductDetailAction.Init -> {}
 
             is ProductDetailAction.NavigateToEditProduct -> {
-                navigator.navigateTo(Destination.ProductDetail.createRoute(action.productId))
+                navigator.navigateTo(Destination.EditProduct.createRoute(action.productId))
             }
         }
     }

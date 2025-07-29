@@ -105,6 +105,16 @@ class MainActivity : ComponentActivity() {
                             state = state,
                             onAction = { action -> viewModel.onAction(action) })
                     }
+
+                    composable(
+                        route = Destination.EditProduct.route,
+                        arguments = listOf(navArgument("productId") { type = NavType.IntType })
+                    ) { backStackEntry ->
+
+                        val productId =
+                            backStackEntry.arguments?.getInt("productId") ?: return@composable
+
+                    }
                 }
 
 
