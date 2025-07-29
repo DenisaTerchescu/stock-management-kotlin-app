@@ -7,8 +7,8 @@ class ComposeNavigator @Inject constructor() : Navigator {
 
     lateinit var navController: NavHostController
 
-    override fun navigateTo(destination: Destination) {
-        navController.navigate(destination.getRoute())
+    override fun navigateTo(route: String) {
+        navController.navigate(route)
     }
 
 

@@ -47,7 +47,7 @@ class DashboardViewModel @Inject constructor(
 
             DashboardAction.NavigateToProductList -> {
                 viewModelScope.launch {
-                    navigator.navigateTo(Destination.ProductList)
+                    navigator.navigateTo(Destination.ProductList.route)
                 }
             }
 
@@ -55,7 +55,7 @@ class DashboardViewModel @Inject constructor(
             DashboardAction.NavigateToSupplierList -> {}
             DashboardAction.NavigateToTransactionHistory -> {
                 viewModelScope.launch {
-                    navigator.navigateTo(Destination.TransactionHistory)
+                    navigator.navigateTo(Destination.TransactionHistory.route)
                 }
             }
         }

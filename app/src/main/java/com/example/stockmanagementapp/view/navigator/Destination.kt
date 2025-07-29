@@ -5,7 +5,9 @@ sealed class Destination(val route: String) {
     object Login : Destination("login")
     object Dashboard : Destination("dashboard")
     object ProductList : Destination("product_list")
-    data class ProductDetail(val productId: Int) : Destination("product_detail/$productId")
+    object ProductDetail : Destination("product_detail/{productId}") {
+        fun createRoute(productId: Int): String = "product_detail/$productId"
+    }
     data class EditProduct(val productId: Int) : Destination("add_product/$productId")
 
     object SupplierList : Destination("supplier_list")

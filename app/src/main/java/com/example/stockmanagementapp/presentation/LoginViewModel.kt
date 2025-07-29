@@ -40,7 +40,7 @@ class LoginViewModel @Inject constructor(
                 val password =  _uiState.value.password
                 if (username == "admin" && password == "admin"){
                     viewModelScope.launch {
-                        navigator.navigateTo(Destination.Dashboard)
+                        navigator.navigateTo(Destination.Dashboard.route)
                     }
                 }
                 else {

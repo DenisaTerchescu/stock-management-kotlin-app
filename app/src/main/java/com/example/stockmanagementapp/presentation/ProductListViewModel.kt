@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.stockmanagementapp.data.model.Product
 import com.example.stockmanagementapp.repository.StockRepository
+import com.example.stockmanagementapp.view.navigator.Destination
+import com.example.stockmanagementapp.view.navigator.Navigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,11 +22,14 @@ data class ProductListState(
 sealed class ProductListAction {
     data class AddProduct(val product: Product) : ProductListAction()
     data object FetchProducts : ProductListAction()
+
+    data class NavigateToProductDetail(val productId: Int)  : ProductListAction()
 }
 
 @HiltViewModel
 class ProductListViewModel @Inject constructor(
-    private val repository: StockRepository
+    private val repository: StockRepository,
+    private val navigator: Navigator
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProductListState(isLoading = true))
@@ -42,6 +47,9 @@ class ProductListViewModel @Inject constructor(
                     repository.insertProduct(action.product)
                     fetchProducts()
                 }
+            }
+           is ProductListAction.NavigateToProductDetail -> {
+                navigator.navigateTo(Destination.ProductDetail.createRoute(action.productId))
             }
         }
     }
