@@ -1,6 +1,7 @@
 package com.example.stockmanagementapp.view
 
 import DashboardScreen
+import SupplierListScreen
 import TransactionScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -19,6 +20,7 @@ import com.example.stockmanagementapp.presentation.DashboardViewModel
 import com.example.stockmanagementapp.presentation.LoginViewModel
 import com.example.stockmanagementapp.presentation.ProductDetailViewModel
 import com.example.stockmanagementapp.presentation.ProductListViewModel
+import com.example.stockmanagementapp.presentation.SupplierListViewModel
 import com.example.stockmanagementapp.presentation.TransactionHistoryViewModel
 import com.example.stockmanagementapp.ui.theme.StockManagementAppTheme
 import com.example.stockmanagementapp.view.navigator.ComposeNavigator
@@ -116,7 +118,18 @@ class MainActivity : ComponentActivity() {
                         onAction = { action -> viewModel.onAction(action) })
 
                     }
+                    composable(Destination.SupplierList.route) {
+                        val viewModel: SupplierListViewModel = hiltViewModel()
+                        val state by viewModel.uiState.collectAsState()
+
+                        SupplierListScreen(
+                            state = state,
+                            onAction = { action -> viewModel.onAction(action) },
+                            )
+                    }
                 }
+
+
 
 
             }
