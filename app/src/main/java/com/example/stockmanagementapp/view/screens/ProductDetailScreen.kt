@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -23,13 +24,13 @@ import com.example.stockmanagementapp.presentation.ProductDetailState
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailScreen(
-    productId:Int,
+    productId: Int,
     state: ProductDetailState,
     onAction: (ProductDetailAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         onAction(ProductDetailAction.Init(productId))
     }
 
@@ -61,11 +62,33 @@ fun ProductDetailScreen(
 
     ) { innerPadding ->
         Column(
-            modifier = Modifier.padding(innerPadding),
+            modifier = modifier.padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            state.product.let {
+
+                Column(
+                    modifier = Modifier.padding(12.dp)
+                ) {
+                    Text(text = "Product id: ${it.id}")
+                    Text(text = "Product name: ${it.name}")
+                    Text(text = "Product description: ${it.description}")
+                    Text(text = "Product price: ${it.price}")
+                    Text(text = "Stock level: ${it.currentStockLevel}")
+                }
+
+            }
+            Button(
+                onClick = {
+                    onAction(ProductDetailAction.NavigateToEditProduct(productId))
+                },
+                content = {
+                    Text("Edit product")
+                }
+            )
 
         }
     }
+
 }

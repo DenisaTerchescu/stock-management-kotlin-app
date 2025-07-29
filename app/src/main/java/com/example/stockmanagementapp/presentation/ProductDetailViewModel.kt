@@ -1,6 +1,7 @@
 package com.example.stockmanagementapp.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.stockmanagementapp.data.model.Product
 import com.example.stockmanagementapp.repository.StockRepository
 import com.example.stockmanagementapp.view.navigator.Destination
@@ -8,6 +9,8 @@ import com.example.stockmanagementapp.view.navigator.Navigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class ProductDetailState(
@@ -47,7 +50,23 @@ class ProductDetailViewModel @Inject constructor(
     fun onAction(action: ProductDetailAction) {
         when (action) {
 
-            is ProductDetailAction.Init -> {}
+            is ProductDetailAction.Init -> {
+                viewModelScope.launch {
+
+                    repository.getProductById(action.productId)
+                        .catch {
+                            _uiState.value = _uiState.value.copy(error = it.message)
+                        }
+                        .collect {
+                            it?.let {
+                                _uiState.value = _uiState.value.copy(product = it)
+                            }
+
+                        }
+
+
+                }
+            }
 
             is ProductDetailAction.NavigateToEditProduct -> {
                 navigator.navigateTo(Destination.EditProduct.createRoute(action.productId))

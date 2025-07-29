@@ -16,6 +16,9 @@ class StockRepository(
     private val transactionDao: TransactionDao
 ) {
     // For the products
+    fun getProductById(id: Int): Flow<Product?> {
+        return productDao.getProductById(id)
+    }
     suspend fun insertProduct(product: Product) = productDao.insert(product)
     suspend fun deleteProduct(product: Product) = productDao.delete(product)
     fun getAllProducts(): Flow<List<Product>> = productDao.getAllProducts()

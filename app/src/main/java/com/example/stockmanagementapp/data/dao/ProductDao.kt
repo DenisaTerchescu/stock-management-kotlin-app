@@ -19,4 +19,7 @@ interface ProductDao {
 
     @Query("SELECT * FROM Product")
     fun getAllProducts(): Flow<List<Product>>
+
+    @Query("SELECT * FROM product WHERE id = :id")
+    fun getProductById(id: Int): Flow<Product?>
 }
