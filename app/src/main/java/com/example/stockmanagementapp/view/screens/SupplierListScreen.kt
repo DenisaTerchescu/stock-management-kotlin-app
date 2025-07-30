@@ -75,7 +75,7 @@ fun SupplierListScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
-                placeholder = { Text("Search supplier") },
+                placeholder = { Text("Search supplier by name") },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = "") }
             )
 

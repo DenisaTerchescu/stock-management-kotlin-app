@@ -1,6 +1,5 @@
 package com.example.stockmanagementapp.presentation
 
-import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.stockmanagementapp.data.model.Supplier
@@ -12,7 +11,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import java.util.Locale
 import javax.inject.Inject
 
 data class SupplierListState(
@@ -55,10 +53,11 @@ class SupplierListViewModel @Inject constructor(
                 val searchValue = action.searchValue
                 _uiState.value = _uiState.value.copy(searchValue = searchValue)
                 if (searchValue.isNotBlank()) {
-                    _uiState.value =
-                        _uiState.value.copy(supplierList = _suppliers.value.filter { it.name.toLowerCase().contains(searchValue.toLowerCase()) })
+                    _uiState.value = _uiState.value.copy(supplierList = _suppliers.value.filter {
+                        it.name.toLowerCase().contains(searchValue.toLowerCase())
+                    })
                 } else {
-                    _uiState.value = _uiState.value.copy(supplierList =  _suppliers.value)
+                    _uiState.value = _uiState.value.copy(supplierList = _suppliers.value)
                 }
             }
         }

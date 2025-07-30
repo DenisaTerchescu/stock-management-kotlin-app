@@ -11,12 +11,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -84,6 +86,15 @@ fun ProductListScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            TextField(
+                value = state.searchValue,
+                onValueChange = { onAction(ProductListAction.SearchProduct(it)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                placeholder = { Text("Search product by name") },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = "") })
+
             LazyColumn {
                 items(state.products) {
                     SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())

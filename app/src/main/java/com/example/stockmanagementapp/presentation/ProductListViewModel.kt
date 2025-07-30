@@ -15,6 +15,7 @@ import javax.inject.Inject
 
 data class ProductListState(
     val products: List<Product> = emptyList(),
+    val searchValue: String = "",
     val isLoading: Boolean = false,
     val error: String? = null
 )
@@ -23,18 +24,21 @@ sealed class ProductListAction {
     data class AddProduct(val product: Product) : ProductListAction()
     data object FetchProducts : ProductListAction()
 
-    data class NavigateToProductDetail(val productId: Int)  : ProductListAction()
+    data class SearchProduct(val searchValue: String) : ProductListAction()
+
+    data class NavigateToProductDetail(val productId: Int) : ProductListAction()
     data object NavigateToAddNewProduct : ProductListAction()
 }
 
 @HiltViewModel
 class ProductListViewModel @Inject constructor(
-    private val repository: StockRepository,
-    private val navigator: Navigator
+    private val repository: StockRepository, private val navigator: Navigator
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProductListState(isLoading = true))
     val uiState: StateFlow<ProductListState> = _uiState
+
+    private val _products = MutableStateFlow<List<Product>>(emptyList())
 
     fun onAction(action: ProductListAction) {
         when (action) {
@@ -49,9 +53,23 @@ class ProductListViewModel @Inject constructor(
                     fetchProducts()
                 }
             }
-           is ProductListAction.NavigateToProductDetail -> {
+
+            is ProductListAction.SearchProduct -> {
+                val searchValue = action.searchValue
+                _uiState.value = _uiState.value.copy(searchValue = searchValue)
+                if (searchValue.isNotBlank()) {
+                    _uiState.value = _uiState.value.copy(products = _products.value.filter {
+                        it.name.toLowerCase().contains(searchValue.toLowerCase())
+                    })
+                } else {
+                    _uiState.value = _uiState.value.copy(products = _products.value)
+                }
+            }
+
+            is ProductListAction.NavigateToProductDetail -> {
                 navigator.navigateTo(Destination.ProductDetail.createRoute(action.productId))
             }
+
             is ProductListAction.NavigateToAddNewProduct -> {
                 navigator.navigateTo(Destination.AddNewProduct.route)
             }
@@ -60,12 +78,11 @@ class ProductListViewModel @Inject constructor(
 
     private fun fetchProducts() {
         viewModelScope.launch {
-            repository.getAllProducts()
-                .catch {
+            repository.getAllProducts().catch {
                     _uiState.value = _uiState.value.copy(error = it.message)
-                }
-                .collect { products ->
+                }.collect { products ->
                     _uiState.value = _uiState.value.copy(products = products)
+                    _products.value = products
                 }
 
         }
