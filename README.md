@@ -3,7 +3,12 @@ Stock Management Kotlin application, developed by using Jetpack Compose and ROOM
 
 ## Screens 
 <p align="center">
+   <img src="screenshots/login_screen.png" height="500" />
   <img src="screenshots/dashboard_screen.png" height="500" />
+  <img src="screenshots/prdoct_list_filter_sweets.png" height="500" />
+   <img src="screenshots/supplier_list_screen.png" height="500" />
+  <img src="screenshots/stock_management_screen.png" height="500" />
+  <img src="screenshots/transaction_history_screen.png" height="500" />
 </p>
 
 ## Implemented features
