@@ -40,6 +40,7 @@ class DashboardViewModel @Inject constructor(
     fun onAction(action: DashboardAction) {
         when (action) {
             DashboardAction.Init -> {
+                populateDatabaseIfEmpty()
                 fetchLowStockItems()
                 fetchRecentTransactions()
 
@@ -66,6 +67,14 @@ class DashboardViewModel @Inject constructor(
                     navigator.navigateTo(Destination.TransactionHistory.route)
                 }
             }
+        }
+    }
+
+    private fun populateDatabaseIfEmpty() {
+        viewModelScope.launch {
+            repository.populateProductsIfEmpty()
+            repository.populateTransactionsIfEmpty()
+            repository.populateSuppliersIfEmpty()
         }
     }
 
