@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -27,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.stockmanagementapp.presentation.ProductCategoryType
 import com.example.stockmanagementapp.presentation.ProductListAction
 import com.example.stockmanagementapp.presentation.ProductListState
 import java.text.SimpleDateFormat
@@ -95,6 +97,30 @@ fun ProductListScreen(
                 placeholder = { Text("Search product by name") },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = "") })
 
+            Row(
+                Modifier.padding(8.dp)
+            ) {
+                FilterChip(
+                    modifier = Modifier.padding(4.dp),
+                    selected = state.selectedFilter == ProductCategoryType.FRUIT,
+                    onClick = {
+                        onAction(ProductListAction.FilterProductsBy(ProductCategoryType.FRUIT))
+                    },
+                    label = {
+                        Text("Fruit")
+                    })
+
+                FilterChip(
+                    modifier = Modifier.padding(4.dp),
+                    selected = state.selectedFilter == ProductCategoryType.SWEETS,
+                    onClick = {
+                        onAction(ProductListAction.FilterProductsBy(ProductCategoryType.SWEETS))
+                    },
+                    label = {
+                        Text("Sweets")
+                    })
+            }
+
             LazyColumn {
                 items(state.products) {
                     SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
@@ -111,6 +137,7 @@ fun ProductListScreen(
                             Text(text = "Product id: ${it.id}")
                             Text(text = "Product name: ${it.name}")
                             Text(text = "Product description: ${it.description}")
+                            Text(text = "Product category: ${it.category}")
                             Text(text = "Product price: ${it.price}")
                             Text(text = "Stock level: ${it.currentStockLevel}")
                         }
@@ -120,5 +147,6 @@ fun ProductListScreen(
                 }
             }
         }
+
     }
 }

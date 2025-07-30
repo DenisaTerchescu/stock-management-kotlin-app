@@ -16,6 +16,7 @@ import javax.inject.Inject
 data class ProductListState(
     val products: List<Product> = emptyList(),
     val searchValue: String = "",
+    val selectedFilter: ProductCategoryType? = null,
     val isLoading: Boolean = false,
     val error: String? = null
 )
@@ -26,8 +27,14 @@ sealed class ProductListAction {
 
     data class SearchProduct(val searchValue: String) : ProductListAction()
 
+    data class FilterProductsBy(val type: ProductCategoryType?) : ProductListAction()
+
     data class NavigateToProductDetail(val productId: Int) : ProductListAction()
     data object NavigateToAddNewProduct : ProductListAction()
+}
+
+enum class ProductCategoryType {
+    FRUIT, SWEETS
 }
 
 @HiltViewModel
@@ -72,6 +79,20 @@ class ProductListViewModel @Inject constructor(
 
             is ProductListAction.NavigateToAddNewProduct -> {
                 navigator.navigateTo(Destination.AddNewProduct.route)
+            }
+
+            is ProductListAction.FilterProductsBy -> {
+                val selectedType = action.type
+                _uiState.value = _uiState.value.copy(
+                    selectedFilter = selectedType,
+                    products = if (selectedType != null) {
+                        _products.value.filter {
+                            it.category.toLowerCase() == selectedType.name.toLowerCase() }
+                    } else {
+                        _products.value
+                    }
+                )
+
             }
         }
     }
