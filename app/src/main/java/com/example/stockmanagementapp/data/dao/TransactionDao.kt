@@ -3,7 +3,9 @@ package com.example.stockmanagementapp.data.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.stockmanagementapp.data.model.Supplier
 import com.example.stockmanagementapp.data.model.Transaction
 import kotlinx.coroutines.flow.Flow
 
@@ -21,4 +23,7 @@ interface TransactionDao {
 
     @Query("SELECT * FROM `transaction` ORDER BY date DESC LIMIT :limit")
     fun getRecentTransactions(limit: Int = 3): Flow<List<Transaction>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(transactions: List<Transaction>)
 }

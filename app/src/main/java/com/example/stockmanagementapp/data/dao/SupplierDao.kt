@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.example.stockmanagementapp.data.model.Product
 import com.example.stockmanagementapp.data.model.Supplier
 import kotlinx.coroutines.flow.Flow
 
@@ -23,4 +24,7 @@ interface SupplierDao {
 
     @Query("SELECT * FROM supplier WHERE id = :id")
      fun getSupplierById(id: Int): Flow<Supplier?>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(suppliers: List<Supplier>)
 }

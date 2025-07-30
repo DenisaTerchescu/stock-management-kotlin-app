@@ -8,6 +8,7 @@ import com.example.stockmanagementapp.data.model.Supplier
 import com.example.stockmanagementapp.data.model.Transaction
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEmpty
 
 
 class StockRepository(
@@ -19,28 +20,32 @@ class StockRepository(
     fun getProductById(id: Int): Flow<Product?> {
         return productDao.getProductById(id)
     }
+
     suspend fun insertProduct(product: Product) = productDao.insert(product)
     suspend fun deleteProduct(product: Product) = productDao.delete(product)
     suspend fun updateProduct(product: Product) {
         productDao.updateProduct(product)
     }
+
     fun getAllProducts(): Flow<List<Product>> = productDao.getAllProducts()
 
     fun getLowStockProducts(): Flow<List<Product>> {
-        return productDao.getAllProducts()
-            .map { products ->
-                products.filter { it.currentStockLevel < it.minimumStockLevel }
-            }
+        return productDao.getAllProducts().map { products ->
+            products.filter { it.currentStockLevel < it.minimumStockLevel }
+        }
     }
+
 
     // For the suppliers
     suspend fun getSupplierById(id: Int): Flow<Supplier?> {
         return supplierDao.getSupplierById(id)
     }
+
     suspend fun insertSupplier(supplier: Supplier) = supplierDao.insert(supplier)
     suspend fun updateSupplier(supplier: Supplier) {
         supplierDao.updateSupplier(supplier)
     }
+
     fun getAllSuppliers(): Flow<List<Supplier>> = supplierDao.getAllSuppliers()
 
     // For the transactions
