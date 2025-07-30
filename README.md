@@ -1,5 +1,5 @@
 # StockIT app
-Stock Management Kotlin application, developed by using Jetpack Compose and ROOM DB, which provides features to add, edit, and track products and suppliers, record sales and restocks, and monitor low stock levels.
+Stock Management Kotlin application, developed by using Jetpack Compose and Room DB, which provides features to add, edit, and track products and suppliers, record sales and restocks, and monitor low stock levels.
 
 ## Screens 
 <p align="center">
