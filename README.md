@@ -2,7 +2,7 @@
 Stock Management Kotlin application, developed by using Jetpack Compose and ROOM DB, which provides features to add, edit, and track products and suppliers, record sales and restocks, and monitor low stock levels.
 
 ## Screens 
-![Dashboard Screenshot]screenshots/dashboard_screen.png)
+![Dashboard Screenshot](screenshots/dashboard_screen.png)
 
 ## Implemented features
 - [x] User Authentication via the LoginScreen with error handling
