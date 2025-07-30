@@ -11,6 +11,12 @@ Stock Management Kotlin application, developed by using Jetpack Compose and Room
   <img src="screenshots/transaction_screen.png" height="500" />
 </p>
 
+## Setup instructions
+
+```bash
+git clone https://github.com/DenisaTerchescu/stock-management-kotlin-app.git
+cd stock-management-app
+```
 ## Implemented features
 - [x] User Authentication
      * LoginScreen with error handling
