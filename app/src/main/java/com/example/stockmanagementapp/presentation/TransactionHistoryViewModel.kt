@@ -2,6 +2,7 @@ package com.example.stockmanagementapp.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.stockmanagementapp.data.model.Product
 import com.example.stockmanagementapp.data.model.Transaction
 import com.example.stockmanagementapp.repository.StockRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,8 +15,8 @@ import kotlin.collections.List
 
 data class TransactionHistoryState(
     val transactions: List<Transaction> = emptyList(),
-    val saleFilterChipSelected: Boolean = false,
-    val restockFilterChipSelected: Boolean = false,
+    val filteredTransactions: List<Transaction> = emptyList(),
+    val selectedFilter: TransactionType? = null,
     val isLoading: Boolean = false,
     val error: String? = null
 )
@@ -37,7 +38,7 @@ class TransactionHistoryViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(TransactionHistoryState(isLoading = true))
     val uiState: StateFlow<TransactionHistoryState> = _uiState
 
-    private var initialTransactionList = emptyList<Transaction>()
+    private val initialTransactionList = MutableStateFlow<List<Transaction>>(emptyList())
 
     fun onAction(action: TransactionHistoryAction) {
         when (action) {
@@ -49,21 +50,22 @@ class TransactionHistoryViewModel @Inject constructor(
                         }
                         .collect { transactions ->
                             _uiState.value = _uiState.value.copy(transactions = transactions)
-                            initialTransactionList = transactions
+                            initialTransactionList.value = transactions
                         }
 
                 }
             }
             is TransactionHistoryAction.FilterTransactionsBy -> {
-                initialTransactionList =  _uiState.value.transactions
-                when(action.type){
-                    TransactionType.SALE ->
-                        _uiState.value = _uiState.value.copy(transactions = initialTransactionList.filter { it.type == "sale" })
-                    TransactionType.RESTOCK ->
-                        _uiState.value = _uiState.value.copy(transactions = initialTransactionList.filter { it.type == "restock" })
-
-                    null ->  _uiState.value = _uiState.value.copy(transactions = initialTransactionList)
-                }
+                val selectedType = action.type
+                _uiState.value = _uiState.value.copy(
+                    selectedFilter = selectedType,
+                    transactions = if (selectedType != null) {
+                        initialTransactionList.value.filter {
+                            it.type.toLowerCase() == selectedType.name.toLowerCase() }
+                    } else {
+                        initialTransactionList.value
+                    }
+                )
 
             }
 

@@ -1,5 +1,3 @@
-
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,13 +19,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.stockmanagementapp.presentation.ProductListAction
-import com.example.stockmanagementapp.presentation.ProductListState
 import com.example.stockmanagementapp.presentation.TransactionHistoryAction
 import com.example.stockmanagementapp.presentation.TransactionHistoryState
 import com.example.stockmanagementapp.presentation.TransactionType
-import com.example.stockmanagementapp.view.components.FeatureMainSection
-import com.example.stockmanagementapp.view.components.LowStockItemsSections
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -39,7 +33,7 @@ fun TransactionScreen(
     modifier: Modifier = Modifier,
 ) {
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         onAction(TransactionHistoryAction.Init)
     }
 
@@ -77,43 +71,43 @@ fun TransactionScreen(
         ) {
             Row(
                 Modifier.padding(8.dp)
-            ){
+            ) {
                 FilterChip(
                     modifier = Modifier.padding(4.dp),
-                    selected = state.saleFilterChipSelected,
+                    selected = state.selectedFilter == TransactionType.SALE,
                     onClick = {
                         onAction(TransactionHistoryAction.FilterTransactionsBy(TransactionType.SALE))
                     },
                     label = {
                         Text("Sale")
-                    }
-                )
+                    })
 
                 FilterChip(
                     modifier = Modifier.padding(4.dp),
-                    selected = state.restockFilterChipSelected,
+                    selected = state.selectedFilter == TransactionType.RESTOCK,
                     onClick = {
                         onAction(TransactionHistoryAction.FilterTransactionsBy(TransactionType.RESTOCK))
                     },
                     label = {
                         Text("Restock")
-                    }
-                )
+                    })
 
             }
             LazyColumn {
                 items(state.transactions) { transaction ->
                     val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
 
-                        val transactionDate = dateFormat.format(transaction.date)
-                   ElevatedCard(modifier = Modifier.padding(8.dp).fillMaxWidth()){
-                      Column {
-                          Text(text = "Transaction id: ${transaction.id}")
-                          Text(text = "Transaction type: ${transaction.type}")
-                          Text(text = "Transaction date: $transactionDate")
-                      }
+                    val transactionDate = dateFormat.format(transaction.date)
+                    ElevatedCard(modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth()) {
+                        Column {
+                            Text(text = "Transaction id: ${transaction.id}")
+                            Text(text = "Transaction type: ${transaction.type}")
+                            Text(text = "Transaction date: $transactionDate")
+                        }
 
-                   }
+                    }
 
                 }
             }
