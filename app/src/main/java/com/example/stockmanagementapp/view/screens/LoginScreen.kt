@@ -12,10 +12,8 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -53,27 +50,34 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(stringResource(R.string.welcome_back_headline), textAlign = TextAlign.Center, fontSize = 40.sp)
+            Text(
+                modifier = Modifier.padding(10.dp),
+                text = stringResource(R.string.welcome_back_headline),
+                textAlign = TextAlign.Center,
+                fontSize = 40.sp
+            )
 
             OutlinedTextField(
                 value = username,
                 onValueChange = {
-                username = it
+                    username = it
                     onAction(LoginAction.ValidateUsername(username))
-            }, leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.AccountBox, contentDescription = null
-                )
-            }, label = {
-                Text("Username")
-            }, keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.AccountBox, contentDescription = null
+                    )
+                },
+                label = {
+                    Text("Username")
+                },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 isError = state.error != null,
-               supportingText = {
-                   if (state.error != null){
-                       Text(state.error)
-                   }
-               }
-            )
+                supportingText = {
+                    if (state.error != null) {
+                        Text(state.error)
+                    }
+                })
 
             OutlinedTextField(
                 value = password,
@@ -93,7 +97,7 @@ fun LoginScreen(
                 visualTransformation = PasswordVisualTransformation(),
                 isError = state.error != null,
                 supportingText = {
-                    if (state.error != null){
+                    if (state.error != null) {
                         Text(state.error)
                     }
                 },
@@ -102,9 +106,7 @@ fun LoginScreen(
                 .padding(20.dp)
                 .fillMaxWidth(), onClick = {
                 onAction(LoginAction.NavigateToDashboard)
-            },
-                enabled = state.username.isNotEmpty() && state.password.isNotEmpty(),
-                content = {
+            }, enabled = state.username.isNotEmpty() && state.password.isNotEmpty(), content = {
                 Text(stringResource(R.string.login_button_text))
             })
         }

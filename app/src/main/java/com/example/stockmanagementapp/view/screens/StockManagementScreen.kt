@@ -161,7 +161,11 @@ fun StockManagementScreen(
                             imeAction = ImeAction.Done
                         )
                     )
-                    Button(enabled = saveButtonEnabled, onClick = {
+                    Button(
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .align(Alignment.CenterHorizontally),
+                        enabled = saveButtonEnabled, onClick = {
                         onAction(
                             StockManagementAction.Save(
                                 newTransaction.copy(

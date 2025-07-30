@@ -132,21 +132,30 @@ fun AddNewProductScreen(
                             price = value
                         },
                         keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number,
-                            imeAction = ImeAction.Next
+                            keyboardType = KeyboardType.Number, imeAction = ImeAction.Next
                         )
                     )
 
-                    Button(enabled = saveButtonEnabled, onClick = {
-                        onAction(AddNewProductAction.SaveProduct(newProduct.copy(
-                            name = name,
-                            description = description,
-                            category = category,
-                            price = price.toDouble()
-                        )))
-                    }, content = {
-                        Text("Add the new product")
-                    })
+                    Button(
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .align(Alignment.CenterHorizontally),
+                        enabled = saveButtonEnabled,
+                        onClick = {
+                            onAction(
+                                AddNewProductAction.SaveProduct(
+                                    newProduct.copy(
+                                        name = name,
+                                        description = description,
+                                        category = category,
+                                        price = price.toDouble()
+                                    )
+                                )
+                            )
+                        },
+                        content = {
+                            Text("Add the new product")
+                        })
                 }
 
 
