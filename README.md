@@ -44,6 +44,7 @@ cd stock-management-app
 ### Bonus features
 - [x] Exporting transaction history as a CSV for sharing
 - [x] Unit tests
+- [x] Offline caching via Shared Preferences
 
 ## Architecture overview
 This project follows a clean MVVM architecture combined with a repository pattern, as it goes:
