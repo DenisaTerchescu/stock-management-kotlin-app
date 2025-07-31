@@ -19,5 +19,5 @@ fun getCachedProductList(context: Context): List<Product> {
     val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     val json = prefs.getString(PRODUCT_LIST_KEY, null) ?: return emptyList()
     val type = object : TypeToken<List<Product>>() {}.type
-    return Gson().fromJson(json, type)
+    return Gson().fromJson(json, type) ?: emptyList()
 }

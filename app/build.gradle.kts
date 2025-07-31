@@ -78,5 +78,6 @@ dependencies {
     testImplementation("androidx.arch.core:core-testing:2.2.0")
 
     implementation("com.google.code.gson:gson:2.10.1")
+    testImplementation("net.bytebuddy:byte-buddy:1.14.5")
 
 }
