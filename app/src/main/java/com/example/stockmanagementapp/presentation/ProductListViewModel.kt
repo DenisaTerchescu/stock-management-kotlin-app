@@ -1,9 +1,12 @@
 package com.example.stockmanagementapp.presentation
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.stockmanagementapp.data.model.Product
 import com.example.stockmanagementapp.repository.StockRepository
+import com.example.stockmanagementapp.utils.getCachedProductList
+import com.example.stockmanagementapp.utils.saveProductListToPrefs
 import com.example.stockmanagementapp.view.navigator.Destination
 import com.example.stockmanagementapp.view.navigator.Navigator
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,8 +25,7 @@ data class ProductListState(
 )
 
 sealed class ProductListAction {
-    data class AddProduct(val product: Product) : ProductListAction()
-    data object FetchProducts : ProductListAction()
+    data class FetchProducts(val context: Context) : ProductListAction()
 
     data class SearchProduct(val searchValue: String) : ProductListAction()
 
@@ -50,16 +52,10 @@ class ProductListViewModel @Inject constructor(
     fun onAction(action: ProductListAction) {
         when (action) {
 
-            ProductListAction.FetchProducts -> {
-                fetchProducts()
+            is ProductListAction.FetchProducts -> {
+                fetchProducts(action.context)
             }
 
-            is ProductListAction.AddProduct -> {
-                viewModelScope.launch {
-                    repository.insertProduct(action.product)
-                    fetchProducts()
-                }
-            }
 
             is ProductListAction.SearchProduct -> {
                 val searchValue = action.searchValue
@@ -83,28 +79,35 @@ class ProductListViewModel @Inject constructor(
 
             is ProductListAction.FilterProductsBy -> {
                 val selectedType = action.type
-                _uiState.value = _uiState.value.copy(
-                    selectedFilter = selectedType,
-                    products = if (selectedType != null) {
-                        _products.value.filter {
-                            it.category.toLowerCase() == selectedType.name.toLowerCase() }
-                    } else {
-                        _products.value
-                    }
-                )
+                _uiState.value =
+                    _uiState.value.copy(
+                        selectedFilter = selectedType, products = if (selectedType != null) {
+                            _products.value.filter {
+                                it.category.toLowerCase() == selectedType.name.toLowerCase()
+                            }
+                        } else {
+                            _products.value
+                        })
 
             }
         }
     }
 
-    private fun fetchProducts() {
+    private fun fetchProducts(context: Context) {
         viewModelScope.launch {
             repository.getAllProducts().catch {
+                val cachedProducts = getCachedProductList(context)
+                if (cachedProducts.isNotEmpty()) {
+                    _uiState.value = _uiState.value.copy(products = cachedProducts)
+                    _products.value = cachedProducts
+                } else {
                     _uiState.value = _uiState.value.copy(error = it.message)
-                }.collect { products ->
-                    _uiState.value = _uiState.value.copy(products = products)
-                    _products.value = products
                 }
+            }.collect { products ->
+                _uiState.value = _uiState.value.copy(products = products)
+                _products.value = products
+                saveProductListToPrefs(context, products)
+            }
 
         }
     }

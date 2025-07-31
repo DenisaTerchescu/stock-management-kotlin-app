@@ -76,4 +76,7 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.7")
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.arch.core:core-testing:2.2.0")
+
+    implementation("com.google.code.gson:gson:2.10.1")
+
 }
